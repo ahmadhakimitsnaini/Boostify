@@ -1,0 +1,13 @@
+{
+  "name": "yucano-labs-monorepo",
+  "private": true,
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "dev": "pnpm --filter '*' dev",
+    "build": "pnpm --filter '*' build",
+    "test": "pnpm --filter '*' test"
+  }
+}

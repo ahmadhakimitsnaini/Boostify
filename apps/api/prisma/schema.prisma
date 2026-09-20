@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id                String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email             String               @unique
+  name              String
+  subscription_tier String               @default("FREE")
+  created_at        DateTime             @default(now())
+  deleted_at        DateTime?
+  integrations      ChannelIntegration[]
+  flows             Flow[]
+  contacts          Contact[]
+  messages          MessageHistory[]
+}
+
+model ChannelIntegration {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenant_id    String    @db.Uuid
+  platform     String    // "IG" atau "WA"
+  access_token String    // Dienkripsi sebelum disimpan
+  page_id      String
+  created_at   DateTime  @default(now())
+  deleted_at   DateTime?
+
+  tenant       Tenant    @relation(fields: [tenant_id], references: [id])
+
+  @@unique([tenant_id, platform])
+}
+
+model Flow {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenant_id       String    @db.Uuid
+  name            String
+  trigger_type    String
+  trigger_keyword String?
+  flow_data       Json      @db.JsonB // Menyimpan struktur React Flow
+  is_active       Boolean   @default(true)
+  created_at      DateTime  @default(now())
+  deleted_at      DateTime?
+
+  tenant          Tenant    @relation(fields: [tenant_id], references: [id])
+}
+
+model Contact {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenant_id        String    @db.Uuid
+  platform_user_id String
+  name             String
+  phone            String?
+  email            String?
+  paused_until     DateTime? // Implementasi Live Inbox Pause
+  created_at       DateTime  @default(now())
+
+  tenant           Tenant           @relation(fields: [tenant_id], references: [id])
+  messages         MessageHistory[]
+
+  @@unique([tenant_id, platform_user_id])
+}
+
+model MessageHistory {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  contact_id String   @db.Uuid
+  tenant_id  String   @db.Uuid
+  direction  String   // "INBOUND" atau "OUTBOUND"
+  content    String   @db.Text
+  timestamp  DateTime @default(now())
+
+  contact    Contact  @relation(fields: [contact_id], references: [id])
+  tenant     Tenant   @relation(fields: [tenant_id], references: [id])
+
+  @@index([tenant_id, contact_id, timestamp])
+}
