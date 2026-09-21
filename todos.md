@@ -11,10 +11,10 @@ Berdasarkan analisis arsitektur dan teknis (Webhook, Flow Engine, Database, dan 
 
 ## Fase 2: Core Engine - Webhook Ingestion & Queue (Minggu 2)
 - [ ] **2.1. Pendaftaran Aplikasi Meta:** Mendaftarkan aplikasi di Meta for Developers untuk mendapatkan `META_APP_SECRET` dan akses API WA/IG.
-- [ ] **2.2. Endpoint Webhook Super-Ringan:** Membuat rute `/api/webhooks/meta` di NestJS yang diisolasi dari *middleware* berat.
-- [ ] **2.3. Validasi Keamanan Meta:** Mengimplementasikan fungsi validasi `X-Hub-Signature-256`.
-- [ ] **2.4. Integrasi BullMQ:** Mendorong payload yang valid ke antrean Redis (`incoming-messages`) dan mengembalikan `HTTP 200 OK` dalam waktu < 2 detik.
-- [ ] **2.5. Idempotency Setup:** Menyimpan *Event ID* dari Meta di Redis (TTL 1 jam) agar pesan yang sama (duplikat) di-*drop* sebelum masuk ke dalam *Queue*.
+- [x] **2.2. Endpoint Webhook Super-Ringan:** Membuat rute `/api/webhooks/meta` di NestJS yang diisolasi dari *middleware* berat.
+- [x] **2.3. Validasi Keamanan Meta:** Mengimplementasikan fungsi validasi `X-Hub-Signature-256`.
+- [x] **2.4. Integrasi BullMQ:** Mendorong payload yang valid ke antrean Redis (`incoming-messages`) dan mengembalikan `HTTP 200 OK` secara aman.
+- [x] **2.5. Idempotency Setup:** Menyimpan *Event ID* dari Meta di Redis (TTL 1 jam) agar pesan yang sama (duplikat) di-*drop* sebelum masuk ke dalam *Queue*.
 
 ## Fase 3: Rule-Based Flow Engine & Meta API (Minggu 3)
 - [ ] **3.1. Worker Service (Konsumen Queue):** Membuat *Worker* BullMQ yang secara asinkron mengambil data dari antrean `incoming-messages`.

@@ -13,5 +13,6 @@
       "Bash(git push *)",
       "Bash(npx create-next-app@latest *)"
     ]
-  }
+  },
+  "spinnerTipsEnabled": true
 }
