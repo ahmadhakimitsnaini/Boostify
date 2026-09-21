@@ -27,27 +27,36 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 
     return this.$extends({
       query: {
-        channelIntegration: {
-          $allOperations({ args, query }) {
-            args.where = { ...args.where, tenant_id: tenantId };
-            return query(args);
-          },
-        },
-        flow: {
-          $allOperations({ args, query }) {
-            args.where = { ...args.where, tenant_id: tenantId };
-            return query(args);
-          },
-        },
-        contact: {
-          $allOperations({ args, query }) {
-            args.where = { ...args.where, tenant_id: tenantId };
-            return query(args);
-          },
-        },
-        messageHistory: {
-          $allOperations({ args, query }) {
-            args.where = { ...args.where, tenant_id: tenantId };
+        $allModels: {
+          $allOperations({ model, operation, args, query }) {
+            // Kita kecualikan model 'tenant' karena ia berada di root
+            if (model === 'Tenant') {
+              return query(args);
+            }
+
+            // Operasi create menyisipkan tenant_id ke dalam `data`
+            if (operation === 'create') {
+              args.data = { ...args.data, tenant_id: tenantId } as any;
+              return query(args);
+            }
+
+            if (operation === 'createMany') {
+              if (Array.isArray(args.data)) {
+                args.data = args.data.map((d) => ({ ...d, tenant_id: tenantId })) as any;
+              } else {
+                args.data = { ...args.data, tenant_id: tenantId } as any;
+              }
+              return query(args);
+            }
+
+            // Operasi baca, update, delete menyisipkan tenant_id ke dalam `where`
+            if (
+              ['findUnique', 'findUniqueOrThrow', 'findFirst', 'findFirstOrThrow', 'findMany', 'update', 'updateMany', 'delete', 'deleteMany', 'count', 'aggregate', 'groupBy'].includes(operation)
+            ) {
+              // @ts-ignore - Type abstraction override
+              args.where = { ...args.where, tenant_id: tenantId };
+            }
+
             return query(args);
           },
         },
