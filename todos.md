@@ -3,11 +3,11 @@
 Berdasarkan analisis arsitektur dan teknis (Webhook, Flow Engine, Database, dan Infrastruktur), berikut adalah pembagian fase pengerjaan sistem Yucano Labs MVP v1.0.
 
 ## Fase 1: Setup Lingkungan & Fondasi Multi-Tenancy (Minggu 1)
-- [ ] **1.1. Inisialisasi Repositori:** Setup Monorepo (misal: Turborepo) atau struktur *split-repo* untuk Frontend (Next.js) dan Backend (NestJS).
-- [ ] **1.2. Setup Database & Cache:** Koneksi awal ke PostgreSQL menggunakan Prisma ORM dan inisialisasi koneksi Redis (BullMQ & Cache).
-- [ ] **1.3. Desain Skema Prisma:** Membuat tabel `Tenant`, `ChannelIntegration`, `Flow`, `Contact`, dan `MessageHistory`. Mengubah tipe data *pause* menjadi `paused_until` (Timestamp).
-- [ ] **1.4. Ekstensi Keamanan Multi-Tenancy:** Membuat *Prisma Client Extension* di NestJS untuk menginjeksi filter `where: { tenant_id: user.tenantId }` secara otomatis di setiap *query*.
-- [ ] **1.5. Enkripsi Kredensial:** Mengimplementasikan modul enkripsi/dekripsi AES-256-GCM untuk menyimpan `access_token` Meta secara aman.
+- [x] **1.1. Inisialisasi Repositori:** Setup Monorepo (misal: Turborepo) atau struktur *split-repo* untuk Frontend (Next.js) dan Backend (NestJS).
+- [x] **1.2. Setup Database & Cache:** Koneksi awal ke PostgreSQL menggunakan Prisma ORM dan inisialisasi koneksi Redis (BullMQ & Cache).
+- [x] **1.3. Desain Skema Prisma:** Membuat tabel `Tenant`, `ChannelIntegration`, `Flow`, `Contact`, dan `MessageHistory`. Mengubah tipe data *pause* menjadi `paused_until` (Timestamp).
+- [x] **1.4. Ekstensi Keamanan Multi-Tenancy:** Membuat *Prisma Client Extension* di NestJS untuk menginjeksi filter `where: { tenant_id: user.tenantId }` secara otomatis di setiap *query*.
+- [x] **1.5. Enkripsi Kredensial:** Mengimplementasikan modul enkripsi/dekripsi AES-256-GCM untuk menyimpan `access_token` Meta secara aman.
 
 ## Fase 2: Core Engine - Webhook Ingestion & Queue (Minggu 2)
 - [ ] **2.1. Pendaftaran Aplikasi Meta:** Mendaftarkan aplikasi di Meta for Developers untuk mendapatkan `META_APP_SECRET` dan akses API WA/IG.
